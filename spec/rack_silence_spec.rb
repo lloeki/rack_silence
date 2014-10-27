@@ -12,6 +12,7 @@ RSpec.describe RackSilence::Logger do
   # TODO: stub in context
   Rails.logger = NullLogger.new
 
+  # Mock logger that detects silencing
   class MockLogger
     def initialize
       @silenced = false
@@ -50,19 +51,28 @@ RSpec.describe RackSilence::Logger do
   context 'random, non-matching request' do
     let(:response) { request.get('/') }
 
-    it { response; expect(logger).not_to be_silenced }
+    it do
+      response
+      expect(logger).not_to be_silenced
+    end
   end
 
   context 'request with path matching a string' do
     let(:response) { request.get('/ping') }
 
-    it { response; expect(logger).to be_silenced }
+    it do
+      response
+      expect(logger).to be_silenced
+    end
   end
 
   context 'request with path matching a regex' do
     let(:response) { request.get('/assets/foo.js') }
 
-    it { response; expect(logger).to be_silenced }
+    it do
+      response
+      expect(logger).to be_silenced
+    end
   end
 
   context 'request with header' do
@@ -74,18 +84,27 @@ RSpec.describe RackSilence::Logger do
     end
     let(:response) { request.get('/', 'HTTP_X_SILENCE_LOGGER' => '') }
 
-    it { response; expect(logger).to be_silenced }
+    it do
+      response
+      expect(logger).to be_silenced
+    end
   end
 
   context 'request with matching token' do
     let(:response) { request.get('/', 'HTTP_X_SILENCE_LOGGER' => 'deadbeef') }
 
-    it { response; expect(logger).to be_silenced }
+    it do
+      response
+      expect(logger).to be_silenced
+    end
   end
 
   context 'request with non-matching token' do
     let(:response) { request.get('/', 'HTTP_X_SILENCE_LOGGER' => 'foo') }
 
-    it { response; expect(logger).not_to be_silenced }
+    it do
+      response
+      expect(logger).not_to be_silenced
+    end
   end
 end
