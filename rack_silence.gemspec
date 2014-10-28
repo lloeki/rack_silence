@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'rack_silence'
-  s.version = '0.1.0'
+  s.version = '1.0.0'
   s.licenses = ['MIT']
   s.summary = 'Silence logs per request from Rack'
   s.description = ''
