@@ -33,10 +33,17 @@ module RackSilence
     def call(env)
       return @app.call(env) unless silence?(env)
 
+      silence_new_relic
       silence(logger) { @app.call(env) }
     end
 
     protected
+
+    def silence_new_relic
+      NewRelic::Agent.ignore_transaction
+    rescue NameError
+      nil
+    end
 
     def silence(logger, temporary_level = @opts[:level])
       previous_level, logger.level = logger.level, temporary_level

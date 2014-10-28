@@ -107,4 +107,16 @@ RSpec.describe RackSilence::Logger do
       expect(logger).not_to be_silenced
     end
   end
+
+  context 'with new relic' do
+    let(:response) { request.get('/', 'HTTP_X_SILENCE_LOGGER' => 'deadbeef') }
+    let(:newrelic_agent) { double }
+
+    it "should ignore the transaction" do
+      stub_const('NewRelic::Agent', newrelic_agent)
+      expect(newrelic_agent).to receive(:ignore_transaction)
+      response
+      expect(logger).to be_silenced
+    end
+  end
 end
